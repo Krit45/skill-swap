@@ -1,0 +1,169 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A public user profile on the SkillSwap platform.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique ID of the user." },
+        "displayName": { "type": "string", "description": "The user's display name." },
+        "photoURL": { "type": "string", "format": "uri", "description": "The user's profile picture URL." },
+        "bio": { "type": "string", "description": "A short biography of the user." },
+        "skillsOffered": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Skills the user can teach."
+        },
+        "skillsWanted": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Skills the user wants to learn."
+        },
+        "experience": { "type": "string", "description": "The user's professional or skill-related experience." },
+        "rating": { "type": "number", "description": "The user's average rating." },
+        "reviewCount": { "type": "integer", "description": "The number of reviews the user has received." },
+        "matchCount": { "type": "integer", "description": "The number of matches the user has made." },
+        "sessionCount": { "type": "integer", "description": "The number of sessions the user has completed." },
+        "location": { "type": "string", "description": "The user's location." },
+        "communicationStyle": { 
+          "type": "string", 
+          "enum": ["In-person", "Remote", "Hybrid"],
+          "description": "The user's preferred communication style." 
+        },
+        "points": { "type": "integer", "description": "The user's total points." },
+        "level": { "type": "integer", "description": "The user's current level." },
+        "badges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "icon": { "type": "string" },
+              "description": { "type": "string" },
+              "unlockedAt": { "type": "string", "format": "date-time" }
+            }
+          },
+          "description": "The user's unlocked badges."
+        },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the user profile was created." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "When the user profile was last updated." }
+      },
+      "required": ["uid", "displayName", "skillsOffered", "skillsWanted"]
+    },
+    "UserPrivate": {
+      "title": "UserPrivate",
+      "description": "Private user data, accessible only by the owner.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "notificationPreferences": {
+          "type": "object",
+          "properties": {
+            "matchAlerts": { "type": "boolean" },
+            "messageNotifications": { "type": "boolean" },
+            "sessionReminders": { "type": "boolean" }
+          },
+          "required": ["matchAlerts", "messageNotifications", "sessionReminders"]
+        }
+      },
+      "required": ["email"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "A connection request or match between two users.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the match." },
+        "users": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "The UIDs of the two users in the match."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "accepted", "rejected"],
+          "description": "The current status of the match request."
+        },
+        "requesterId": { "type": "string", "description": "The UID of the user who initiated the match." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the match request was created." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "When the match status was last updated." }
+      },
+      "required": ["users", "status", "requesterId", "createdAt"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A chat message between two users.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the message." },
+        "matchId": { "type": "string", "description": "The ID of the match this message belongs to." },
+        "senderId": { "type": "string", "description": "The UID of the user who sent the message." },
+        "text": { "type": "string", "description": "The content of the message." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the message was sent." }
+      },
+      "required": ["matchId", "senderId", "text", "createdAt"]
+    },
+    "Session": {
+      "title": "Session",
+      "description": "A scheduled skill-swapping session.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the session." },
+        "matchId": { "type": "string", "description": "The ID of the match this session belongs to." },
+        "title": { "type": "string", "description": "The title or topic of the session." },
+        "startTime": { "type": "string", "format": "date-time", "description": "When the session starts." },
+        "endTime": { "type": "string", "format": "date-time", "description": "When the session ends." },
+        "status": {
+          "type": "string",
+          "enum": ["scheduled", "completed", "cancelled"],
+          "description": "The current status of the session."
+        },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the session was scheduled." }
+      },
+      "required": ["matchId", "title", "startTime", "endTime", "status", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "A user notification for matches, messages, or system alerts.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string", "description": "The UID of the user receiving the notification." },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["match", "message", "system"] },
+        "read": { "type": "boolean" },
+        "matchId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message", "type", "read", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Public user profiles."
+    },
+    "/users_private/{userId}": {
+      "schema": "UserPrivate",
+      "description": "Private user data (e.g., email)."
+    },
+    "/matches/{matchId}": {
+      "schema": "Match",
+      "description": "Skill swap matches and requests."
+    },
+    "/matches/{matchId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Chat messages within a match."
+    },
+    "/matches/{matchId}/sessions/{sessionId}": {
+      "schema": "Session",
+      "description": "Scheduled sessions for a match."
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications."
+    }
+  }
+}
