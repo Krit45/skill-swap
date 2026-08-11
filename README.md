@@ -11,7 +11,7 @@
 
 ---
 
-## 🧠 About the Project  
+## 🧠 About the Project
 
 A full-stack platform where users can swap skills instead of paying money.  
 Teach what you know, learn what you need.
